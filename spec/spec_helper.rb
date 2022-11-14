@@ -21,6 +21,7 @@ class SpannerAdmin
 
   def create_instance
     return if instance_exists?
+
     instance_admin.create_instance(
       parent: project_path,
       instance_id: @instance_id,
@@ -53,7 +54,8 @@ class SpannerAdmin
   end
 
   def instance_exists?
-    true
+    instance_admin.list_instances(parent: project_path)
+      .any? { |instance| instance.name == instance_path }
   end
 
   def project_path
@@ -110,9 +112,15 @@ RSpec.configure do |config|
   config.add_setting :instance_id
   config.add_setting :database_id
 
-  config.project_id = SpannerAdmin.get_project_id
-  config.instance_id = ENV.fetch("SPANNER_INSTANCE_ID")
-  config.database_id = ENV.fetch("SPANNER_DATABASE_ID", "test#{Time.now.to_i}")
+  if ENV["SPANNER_EMULATOR_HOST"]
+    config.project_id = "test-project"
+    config.instance_id = "test-instance"
+    config.database_id = "test#{Time.now.to_i}"
+  else
+    config.project_id = SpannerAdmin.get_project_id
+    config.instance_id = ENV.fetch("SPANNER_INSTANCE_ID")
+    config.database_id = ENV.fetch("SPANNER_DATABASE_ID", "test#{Time.now.to_i}")
+  end
 
   admin = SpannerAdmin.new(
     project_id: config.project_id,
