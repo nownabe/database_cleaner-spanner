@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+if ENV.fetch("COVERAGE", "true") == "true"
+  require "simplecov"
+  SimpleCov.start do
+    add_filter "spec/"
+  end
+end
+
 require "database_cleaner/spanner"
 
 require "google/cloud/spanner"
