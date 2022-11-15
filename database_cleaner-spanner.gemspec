@@ -31,4 +31,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "google-cloud-spanner", "~> 2.10"
   spec.add_dependency "database_cleaner-core", "~> 2.0.0"
+
+  spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "simplecov-cobertura"
 end

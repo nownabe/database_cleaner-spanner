@@ -1,5 +1,17 @@
 # frozen_string_literal: true
 
+if ENV.fetch("COVERAGE", "true") == "true"
+  require "simplecov"
+  SimpleCov.start do
+    add_filter "spec/"
+  end
+
+  if ENV["CI"] == "true"
+    require "simplecov-cobertura"
+    SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+  end
+end
+
 require "database_cleaner/spanner"
 
 require "google/cloud/spanner"
