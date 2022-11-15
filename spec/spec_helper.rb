@@ -5,6 +5,11 @@ if ENV.fetch("COVERAGE", "true") == "true"
   SimpleCov.start do
     add_filter "spec/"
   end
+
+  if ENV["CI"] == "true"
+    require "simplecov-cobertura"
+    SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+  end
 end
 
 require "database_cleaner/spanner"
