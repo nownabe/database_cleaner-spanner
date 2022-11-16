@@ -1,5 +1,10 @@
 # Database Claner Adapter for Cloud Spanner
 
+[![Gem Version](https://badge.fury.io/rb/database_cleaner-spanner.svg)](https://badge.fury.io/rb/database_cleaner-spanner)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/nownabe/database_cleaner-spanner/test/main)
+[![codecov](https://codecov.io/gh/nownabe/database_cleaner-spanner/branch/main/graph/badge.svg?token=y5Dg4FpCeX)](https://codecov.io/gh/nownabe/database_cleaner-spanner)
+[![Maintainability](https://api.codeclimate.com/v1/badges/ea64a23ba2c1785963e8/maintainability)](https://codeclimate.com/github/nownabe/database_cleaner-spanner/maintainability)
+
 Clean your Cloud Spanner databases with Database Cleaner.
 
 See also [https://github.com/DatabaseCleaner/database_cleaner](https://github.com/DatabaseCleaner/database_cleaner) for more information.
