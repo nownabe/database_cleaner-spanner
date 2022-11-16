@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", ":prHourlyLimitNone"],
+  "dependencyDashboard": true,
+  "labels": ["renovate"],
+  "ignorePaths": ["example/**"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["pin"],
+      "automerge": true
+    },
+    {
+      "matchFiles": ["+(Gemfile)"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "stabilityDays": 3
+    },
+    {
+      "matchFiles": ["+(Gemfile)"],
+      "matchUpdateTypes": ["minor"],
+      "automerge": true,
+      "stabilityDays": 7
+    },
+    {
+      "matchFiles": ["+(Gemfile)"],
+      "matchUpdateTypes": ["major"],
+      "stabilityDays": 7,
+      "assigneesFromCodeOwners": true
+    }
+  ]
+}
