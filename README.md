@@ -61,6 +61,7 @@ The Cloud Spanner adapter has only the deletion strategy.
 
 ## Strategy configuration options
 
+* `:batch_deletion` - When set to `true`, [batch DML](https://cloud.google.com/spanner/docs/dml-tasks#use-batch) is used for cleaning. Defaults to `false`.
 * `:cache_tables` - When set to `true`, the list of tables to delete and the deletion orders will be
   read from the Cloud Spanner once, otherwise they will be read before each deletion. Defaults to
   `true`.
