@@ -33,26 +33,40 @@ module DatabaseCleaner
       def initialize(
         only: [],
         except: [],
+        batch_deletion: false,
         cache_tables: true
       )
         @only = only
         @except = except
+        @batch_deletion = batch_deletion
         @cache_tables = cache_tables
 
         @deletable_tables = {}
       end
 
       def clean
-        sorted_table_groups.each do |group|
-          clean_table_group(group)
+        if @batch_deletion
+          clean_as_batch
+        else
+          clean_each
         end
       end
 
       private
 
-      def clean_table_group(group)
-        group.each do |table|
-          client.delete(table) if deletable?(table)
+      def clean_as_batch
+        client.transaction do |tx|
+          tx.batch_update do |b|
+            each_deletable_table do |table|
+              b.batch_update("DELETE #{table} WHERE TRUE")
+            end
+          end
+        end
+      end
+
+      def clean_each
+        each_deletable_table do |table|
+          client.delete(table)
         end
       end
 
@@ -67,6 +81,18 @@ module DatabaseCleaner
           else
             (@only - @except).include?(table)
           end
+      end
+
+      def each_deletable_table(&block)
+        each_group do |group|
+          group.each do |table|
+            block.call(table) if deletable?(table)
+          end
+        end
+      end
+
+      def each_group(&block)
+        sorted_table_groups.each(&block)
       end
 
       def sorted_table_groups

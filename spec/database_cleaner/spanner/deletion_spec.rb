@@ -16,7 +16,11 @@ RSpec.describe DatabaseCleaner::Spanner::Deletion do
   include Helper
 
   subject {
-    described_class.new(only: only, except: except).tap do |instance|
+    described_class.new(
+      only: only,
+      except: except,
+      batch_deletion: batch_deletion
+    ).tap do |instance|
       instance.db = {
         project_id: RSpec.configuration.project_id,
         instance_id: RSpec.configuration.instance_id,
@@ -63,8 +67,26 @@ RSpec.describe DatabaseCleaner::Spanner::Deletion do
 
   let(:only) { [] }
   let(:except) { [] }
+  let(:batch_deletion) { false }
 
   context "by default" do
+    it "deletes all tables" do
+      subject.clean
+
+      expect(count_rows("Products")).to be_zero
+      expect(count_rows("Customers")).to be_zero
+      expect(count_rows("Orders")).to be_zero
+      expect(count_rows("Singers")).to be_zero
+      expect(count_rows("Albums")).to be_zero
+      expect(count_rows("Songs")).to be_zero
+      expect(count_rows("OnlyTable")).to be_zero
+      expect(count_rows("ExceptTable")).to be_zero
+    end
+  end
+
+  context "with batch deletion" do
+    let(:batch_deletion) { true }
+
     it "deletes all tables" do
       subject.clean
 
