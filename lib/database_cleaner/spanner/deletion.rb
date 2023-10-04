@@ -129,11 +129,11 @@ module DatabaseCleaner
         name = "primary" if name == :default
 
         # DB config from ActiveRecord
-        config = ActiveRecord::Base.configurations.configs_for(name: name.to_s).configuration_hash
+        config = ::ActiveRecord::Base.configurations.configs_for(name: name.to_s).configuration_hash
 
         # Keep metadata tables
-        @except << ActiveRecord::SchemaMigration.table_name # schema_migrations
-        @except << ActiveRecord::Base.internal_metadata_table_name # ar_internal_metadata
+        @except << ::ActiveRecord::SchemaMigration.table_name # schema_migrations
+        @except << ::ActiveRecord::Base.internal_metadata_table_name # ar_internal_metadata
 
         Google::Cloud::Spanner.new(
           project_id: config[:project],
