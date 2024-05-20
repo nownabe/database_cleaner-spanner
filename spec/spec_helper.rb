@@ -16,6 +16,15 @@ require "database_cleaner/spanner"
 
 require "google/cloud/spanner"
 
+dotenv = File.expand_path("local.env", __dir__)
+if File.exist?(dotenv)
+  File.read(dotenv).each_line do |line|
+    line.split("=").tap do |key, value|
+      ENV[key] = value.gsub(/^['"]|['"]$/, "")
+    end
+  end
+end
+
 require_relative "spanner_admin"
 
 RSpec.configure do |config|
