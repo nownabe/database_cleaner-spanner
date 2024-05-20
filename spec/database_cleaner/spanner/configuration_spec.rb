@@ -8,17 +8,7 @@ module DatabaseCleaner
 end
 
 module ActiveRecord
-  class Base
-    def self.internal_metadata_table_name
-      "ar_internal_metadata"
-    end
-  end
-
-  class SchemaMigration
-    def self.table_name
-      "schema_migrations"
-    end
-  end
+  class Base; end
 end
 
 require "google/cloud/spanner"
@@ -27,7 +17,7 @@ require "google/cloud/spanner/admin/database"
 require "database_cleaner/spanner/deletion"
 
 RSpec.describe DatabaseCleaner::Spanner::Deletion do
-  before do
+  let(:configurations) do
     configuration = <<~YAML
       adapter: spanner
       instance: #{RSpec.configuration.instance_id}
@@ -39,8 +29,18 @@ RSpec.describe DatabaseCleaner::Spanner::Deletion do
     }
 
     configs_for = double("ActiveRecord::DatabaseConfigurations::HashConfig", configuration_hash: configuration_hash)
-    configurations = double("ActiveRecord::DatabaseConfigurations", configs_for: configs_for)
+    double("ActiveRecord::DatabaseConfigurations", configs_for: configs_for)
+  end
+
+  let(:connection) do
+    schema_migration = double("ActiveRecord::SchemaMigration", table_name: "schema_migrations")
+    double("ActiveRecord::ConnectionAdapters::SpannerAdapter", schema_migration: schema_migration)
+  end
+
+  before do
+    allow(ActiveRecord::Base).to receive(:internal_metadata_table_name).and_return("ar_internal_metadata")
     allow(ActiveRecord::Base).to receive(:configurations).and_return(configurations)
+    allow(ActiveRecord::Base).to receive(:connection).and_return(connection)
   end
 
   it "can generate cloud spanner client from database name when database_cleaner-active_record is in use" do
