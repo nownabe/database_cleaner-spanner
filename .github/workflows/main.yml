@@ -36,6 +36,6 @@ jobs:
     - name: Run the default task
       run: bundle exec rake
 
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@v7
       with:
         files: coverage/coverage.xml
